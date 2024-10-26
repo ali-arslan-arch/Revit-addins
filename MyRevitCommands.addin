@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+	<AddIn Type="Command">
+		<Name>MyRevitCommands</Name>
+		<Assembly>MyRevitCommands.dll</Assembly>
+		<AddInId>
+			26C3FD35-66F3-4A67-9D51-A09556C23BC9
+		</AddInId>
+		<FullClassName>MyRevitCommands.PlaceLintel</FullClassName>
+		<Text>PlaceLintel</Text>
+		<Description>PlaceLintel</Description>
+		<VendorId>Ali</VendorId>
+		<VendorDescription>Ali Arslan</VendorDescription>
+		<VisibilityMode>NotVisibleWhenNoActiveDocument</VisibilityMode>
+	</AddIn>
+	<AddIn Type="Command">
+		<Name>MyRevitCommands</Name>
+		<Assembly>MyRevitCommands.dll</Assembly>
+		<AddInId>
+			17B08B64-8D99-4CDF-915F-680B52B329A4
+		</AddInId>
+		<FullClassName>MyRevitCommands.CroppedPlanBasedOnFamilyDimensions</FullClassName>
+		<Text>CroppedPlanBasedOnFamilyDimensions</Text>
+		<Description>CroppedPlanBasedOnFamilyDimensions</Description>
+		<VendorId>Ali</VendorId>
+		<VendorDescription>Ali Arslan</VendorDescription>
+		<VisibilityMode>NotVisibleWhenNoActiveDocument</VisibilityMode>
+	</AddIn>
+	<AddIn Type="Command">
+		<Name>MyRevitCommands</Name>
+		<Assembly>MyRevitCommands.dll</Assembly>
+		<AddInId>
+			7DC2B5B0-4D80-4CBA-A06E-10D594EA806B
+		</AddInId>
+		<FullClassName>MyRevitCommands.LinkedElementSectionBox</FullClassName>
+		<Text>LinkedElementSectionBox</Text>
+		<Description>LinkedElementSectionBox</Description>
+		<VendorId>Ali</VendorId>
+		<VendorDescription>Ali Arslan</VendorDescription>
+		<VisibilityMode>NotVisibleWhenNoActiveDocument</VisibilityMode>
+	</AddIn>
+	<AddIn Type="Command">
+		<Name>MyRevitCommands</Name>
+		<Assembly>MyRevitCommands.dll</Assembly>
+		<AddInId>
+			CD0681BF-0270-4570-9C9A-DEBCD7AF6424
+		</AddInId>
+		<FullClassName>MyRevitCommands.AddRoomSeparator</FullClassName>
+		<Text>AddRoomSeparator</Text>
+		<Description>AddRoomSeparator</Description>
+		<VendorId>Ali</VendorId>
+		<VendorDescription>Ali Arslan</VendorDescription>
+		<VisibilityMode>NotVisibleWhenNoActiveDocument</VisibilityMode>
+	</AddIn>
+	<AddIn Type="Command">
+		<Name>MyRevitCommands</Name>
+		<Assembly>MyRevitCommands.dll</Assembly>
+		<AddInId>
+			7DEB1BF4-EBFF-4C74-BFD7-560EB311F12E
+		</AddInId>
+		<FullClassName>MyRevitCommands.FragmentPlanbyRegion</FullClassName>
+		<Text>FragmentPlanbyRegionForm</Text>
+		<Description>FragmentPlanbyRegionForm</Description>
+		<VendorId>Ali</VendorId>
+		<VendorDescription>Ali Arslan</VendorDescription>
+		<VisibilityMode>NotVisibleWhenNoActiveDocument</VisibilityMode>
+	</AddIn>
+	<AddIn Type="Command">
+		<Name>MyRevitCommands</Name>
+		<Assembly>MyRevitCommands.dll</Assembly>
+		<AddInId>
+			1B26A5C9-9C1E-4141-B8B4-67A62DD3B896
+		</AddInId>
+		<FullClassName>MyRevitCommands.Section</FullClassName>
+		<Text>Section</Text>
+		<Description>Section</Description>
+		<VendorId>Ali</VendorId>
+		<VendorDescription>Ali Arslan</VendorDescription>
+		<VisibilityMode>NotVisibleWhenNoActiveDocument</VisibilityMode>
+	</AddIn>
+	<AddIn Type="Application">
+		<Name>ApplicationPlugins</Name>
+		<Assembly>MyRevitCommands.dll</Assembly>
+		<AddInId>
+			C296FC92-B32A-4EBF-9604-44987214573B
+		</AddInId>
+		<FullClassName>MyRevitCommands.ExternalApplication</FullClassName>
+		<VendorId>Ali</VendorId>
+		<VendorDescription>Ali Arslan</VendorDescription>
+	</AddIn>
+</RevitAddIns>
