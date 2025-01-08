@@ -31,14 +31,15 @@ namespace MyRevitCommands
                 }
                 FilteredElementCollector doorcol = new FilteredElementCollector(doc,uidoc.ActiveView.Id);
                 List<Element> doors =  doorcol.OfCategory(BuiltInCategory.OST_Doors).WhereElementIsNotElementType().ToElements().ToList();
-                FilteredElementCollector lentocol = new FilteredElementCollector(doc);
-                FamilySymbol lento = lentocol.OfClass(typeof(FamilySymbol)).WhereElementIsElementType().ToElements().Cast<FamilySymbol>().ToList().First(y => y.Name == "lento");
+                //FilteredElementCollector lentocol = new FilteredElementCollector(doc);
+                //FamilySymbol lento = lentocol.OfClass(typeof(FamilySymbol)).WhereElementIsElementType().ToElements().Cast<FamilySymbol>().ToList().First(y => y.Name == "lento");
 
                 FamilySymbol lento200 = form.lintelfor200;
                 FamilySymbol lento100 = form.lintelfor100;
                 FamilySymbol lento250 = form.lintelfor250;
+                FamilySymbol lento150 = form.lintelfor150;
 
-                
+
                 using (Transaction trans = new Transaction(doc, "Place Lintel"))
                 {
                     trans.Start();
@@ -53,6 +54,10 @@ namespace MyRevitCommands
                     if (!lento250.IsActive)
                     {
                         lento250.Activate();
+                    }
+                    if (!lento150.IsActive)
+                    {
+                        lento150.Activate();
                     }
 
                     foreach (Element door in doors)
@@ -70,7 +75,7 @@ namespace MyRevitCommands
                         LocationPoint lp = door.Location as LocationPoint;
                         //XYZ point = new XYZ(lp.Point.X,lp.Point.Y,lp.Point.Z + doorheight - elev);
                         Double yukseklik = lentoyuksekligi(doc, door);
-                        XYZ facecent = Facecenter(doc, fdoor);
+                        XYZ facecent = Facecenter(doc, door);
                         //XYZ point = new XYZ(lp.Point.X, lp.Point.Y, bo.Max.Z - elev);
                         //XYZ point = new XYZ(lp.Point.X, lp.Point.Y, yukseklik);
                         XYZ point = new XYZ(facecent.X, facecent.Y, yukseklik);
@@ -79,8 +84,11 @@ namespace MyRevitCommands
                         Double width200 = 200 / 304.8;
                         
                         Double width250 = 250 / 304.8;
+                        
+                        Double width150 = 150 / 304.8;
+                        double tolerance = 0.001;
 
-                        if(wall.Width == width200 )
+                        if (wall.Width == width200 )
                         {
                             FamilyInstance lintel = doc.Create.NewFamilyInstance(point, lento200, l, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
                             XYZ lintelvector = lintel.FacingOrientation;
@@ -175,7 +183,49 @@ namespace MyRevitCommands
                             }
 
                         }
-                        if(wall.Width < width200)
+                        if (Math.Abs(wall.Width - width150) < tolerance)
+                        {
+                            FamilyInstance lintel = doc.Create.NewFamilyInstance(point, lento150, l, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                            XYZ lintelvector = lintel.FacingOrientation;
+                            Double angle = lintelvector.AngleTo(doorvector);
+                            XYZ zAxis = XYZ.BasisZ;
+                            XYZ crossProduct = lintelvector.CrossProduct(doorvector);
+                            double dotProductWithZ = crossProduct.DotProduct(zAxis);
+                            if (dotProductWithZ < 0)
+                            {
+                                // Eğer negatifse, ters yönde (counterclockwise) olduğundan,
+                                // açıyı 360 dereceye tamamlamak için şu işlemi yapıyoruz
+                                angle = 2 * Math.PI - angle; // Radyan cinsinden 360 dereceyi çıkarıyoruz
+                            }
+                            ElementTransformUtils.RotateElement(doc, lintel.Id, line, angle);
+                            ElementTransformUtils.MoveElement(doc, lintel.Id, doorvector * (75 / 304.8));
+                            Parameter Length = lintel.LookupParameter(form.parametername200length);
+
+
+                            Parameter p1501 = lintel.LookupParameter(form.parametername2001);
+                            Parameter p1502 = lintel.LookupParameter(form.parametername2002);
+                            Parameter p150leftanchor = lintel.LookupParameter(form.parametername200leftank);
+                            Parameter p150rightanchor = lintel.LookupParameter(form.parametername200rightank);
+                            int off = 0;
+
+                            p150leftanchor.Set(off);
+                            p150rightanchor.Set(off);
+                            if (genislik >= form.offsetdifference)
+                            {
+                                p1501.Set(form.greatoffset);
+                                p1502.Set(form.greatoffset);
+                                Length.Set(genislik + form.greatoffset + form.greatoffset);
+                            }
+                            else
+                            {
+                                p1501.Set(form.lessoffset);
+                                p1502.Set(form.lessoffset);
+                                Length.Set(genislik + form.lessoffset + form.lessoffset);
+
+                            }
+
+                        }
+                        if (wall.Width < width150)
                         {
                             FamilyInstance lintel = doc.Create.NewFamilyInstance(point, lento100, l, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
                             XYZ lintelvector = lintel.FacingOrientation;
@@ -185,7 +235,7 @@ namespace MyRevitCommands
                             double dotProductWithZ = crossProduct.DotProduct(zAxis);
                             if (dotProductWithZ < 0)
                             {
-                                // Eğer negatifse, ters yönde (counterclockwise) olduğundan,
+                                // Eğer negatifse,, ters yönde (counterclockwise) olduğundan,
                                 // açıyı 360 dereceye tamamlamak için şu işlemi yapıyoruz
                                 angle = 2 * Math.PI - angle; // Radyan cinsinden 360 dereceyi çıkarıyoruz
                             }
@@ -277,11 +327,16 @@ namespace MyRevitCommands
             List<Face> sortedFaces = yatayfaces.OrderByDescending(f => f.Area).ToList();
             Face largestFace = sortedFaces[0];
             Face secondLargestFace = sortedFaces[1];
-            yatayfaces.Remove(largestFace);
-            yatayfaces.Remove(secondLargestFace);
+            //yatayfaces.Remove(largestFace);
+            //yatayfaces.Remove(secondLargestFace);
             BoundingBoxXYZ doorBoundingBox = ele.get_BoundingBox(null);
             double doortopZ = doorBoundingBox.Max.Z;
             XYZ doorcenter = (doorBoundingBox.Max + doorBoundingBox.Min) / 2;
+            Parameter heightp = ele.get_Parameter(BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM);
+            Double halfheight = heightp.AsDouble() / 2;
+            Level walllevel = doc.GetElement(ele.LevelId) as Level;
+            Double h = walllevel.Elevation + heightp.AsDouble();
+            XYZ doortop = new XYZ(doorcenter.X, doorcenter.Y, h/*doorcenter.Z + halfheight*/);
             Double max = Double.MaxValue;
             Face topFace = null;
 
@@ -364,13 +419,18 @@ namespace MyRevitCommands
 
             }
             List<Face> sortedFaces = yatayfaces.OrderByDescending(f => f.Area).ToList();
-            Face largestFace = sortedFaces[0];
-            Face secondLargestFace = sortedFaces[1];
-            yatayfaces.Remove(largestFace);
-            yatayfaces.Remove(secondLargestFace);
+            //Face largestFace = sortedFaces[0];
+            //Face secondLargestFace = sortedFaces[1];
+            //yatayfaces.Remove(largestFace);
+            //yatayfaces.Remove(secondLargestFace);
             BoundingBoxXYZ doorBoundingBox = ele.get_BoundingBox(null);
             double doortopZ = doorBoundingBox.Max.Z;
             XYZ doorcenter = (doorBoundingBox.Max + doorBoundingBox.Min) / 2;
+            Parameter heightp = ele.get_Parameter(BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM);
+            Double halfheight = heightp.AsDouble()/2;
+            Level walllevel = doc.GetElement(ele.LevelId) as Level;
+            Double h = walllevel.Elevation + heightp.AsDouble();
+            XYZ doortop = new XYZ(doorcenter.X,doorcenter.Y,h/*doorcenter.Z+halfheight*/);
             Double max = Double.MaxValue;
             Face topFace = null;
 
@@ -380,7 +440,8 @@ namespace MyRevitCommands
                 BoundingBoxUV faceboundingbox = face.GetBoundingBox();
                 XYZ faceorigin = face.Evaluate((faceboundingbox.Max + faceboundingbox.Min) / 2);
                 Double facez = faceorigin.Z;
-                Double distance = doorcenter.DistanceTo(faceorigin);
+                //Double distance = doorcenter.DistanceTo(faceorigin);
+                Double distance = doortop.DistanceTo(faceorigin);
                 if (distance < max)
                 {
                     max = distance;
@@ -388,12 +449,14 @@ namespace MyRevitCommands
                 }
             }
             XYZ facepoint = topFace.Evaluate(new UV());
-            Level walllevel = doc.GetElement(ele.LevelId) as Level;
-            Double yukseklik = facepoint.Z - walllevel.Elevation;
-            //Parameter baseoffset = w.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
-             
             
-                return yukseklik;
+            Double yukseklik = facepoint.Z - walllevel.Elevation;
+            
+
+            //Parameter baseoffset = w.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
+
+
+            return yukseklik;
             
             
             
@@ -448,13 +511,19 @@ namespace MyRevitCommands
 
             }
             List<Face> sortedFaces = yatayfaces.OrderByDescending(f => f.Area).ToList();
-            Face largestFace = sortedFaces[0];
-            Face secondLargestFace = sortedFaces[1];
-            yatayfaces.Remove(largestFace);
-            yatayfaces.Remove(secondLargestFace);
+            //Face largestFace = sortedFaces[0];
+            //Face secondLargestFace = sortedFaces[1];
+            //yatayfaces.Remove(largestFace);
+            //yatayfaces.Remove(secondLargestFace);
             BoundingBoxXYZ doorBoundingBox = ele.get_BoundingBox(null);
             double doortopZ = doorBoundingBox.Max.Z;
-            XYZ doorcenter = (doorBoundingBox.Max + doorBoundingBox.Min) / 2;
+            XYZ dc = (doorBoundingBox.Max + doorBoundingBox.Min) / 2;
+            Double z = (doorBoundingBox.Min.Z + doorBoundingBox.Max.Z) * 3 / 4;
+            Parameter heightp = ele.get_Parameter(BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM);
+            Double halfheight = heightp.AsDouble() / 2;
+            Level walllevel = doc.GetElement(ele.LevelId) as Level;
+            Double h = walllevel.Elevation + heightp.AsDouble();
+            XYZ doorcenter =new XYZ(dc.X, dc.Y, h);
             Double max = Double.MaxValue;
             Face topFace = null;
 
@@ -471,7 +540,7 @@ namespace MyRevitCommands
                     topFace = face;
                 }
             }
-            UV uvPoint = new UV(0.5, 0.5); // Yüzeyin ortasını temsil eden U ve V parametreleri
+            UV uvPoint = new UV(0.5, 0.5); // Yüzeyin ortasını temsil eden U ve V parametreleri.
             BoundingBoxUV facebound = topFace.GetBoundingBox();
             XYZ faceorig = topFace.Evaluate((facebound.Max + facebound.Min) / 2);
 

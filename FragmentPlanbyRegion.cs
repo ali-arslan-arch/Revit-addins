@@ -44,8 +44,8 @@ namespace MyRevitCommands
                         ViewPlan xx = ViewPlan.Create(doc, vt.Id, l.Id);
                         FilteredElementCollector vc = new FilteredElementCollector(doc);
 
-                        ViewPlan v = vc.OfClass(typeof(ViewPlan)).WhereElementIsNotElementType().Cast<ViewPlan>().FirstOrDefault();
-                        xx.CropBox = region.get_BoundingBox(v);
+                        //ViewPlan v = vc.OfClass(typeof(ViewPlan)).WhereElementIsNotElementType().Cast<ViewPlan>().FirstOrDefault();
+                        xx.CropBox = region.get_BoundingBox(null);
                         xx.GetCropRegionShapeManager().SetCropShape(curves[0]);
                         xx.CropBoxActive = true; xx.CropBoxVisible = true;
                         xx.ViewTemplateId = selectLevel.Template.Id;

@@ -45,19 +45,21 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.bigoffset = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.text200leftank = new System.Windows.Forms.TextBox();
-            this.text200rightank = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.text100leftank = new System.Windows.Forms.TextBox();
-            this.text100rightank = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.text200length = new System.Windows.Forms.TextBox();
             this.text100length = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.text200rightank = new System.Windows.Forms.TextBox();
+            this.text100rightank = new System.Windows.Forms.TextBox();
+            this.text200leftank = new System.Windows.Forms.TextBox();
+            this.text100leftank = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -214,16 +216,6 @@
             this.bigoffset.TabIndex = 18;
             this.bigoffset.TextChanged += new System.EventHandler(this.bigoffset_TextChanged);
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 262);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(246, 16);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Parameter names of left and right anchor";
-            this.label9.Click += new System.EventHandler(this.label9_Click);
-            // 
             // comboBox3
             // 
             this.comboBox3.FormattingEnabled = true;
@@ -240,48 +232,6 @@
             this.label10.Size = new System.Drawing.Size(175, 16);
             this.label10.TabIndex = 23;
             this.label10.Text = "Family Type for 250 mm wall";
-            // 
-            // text200leftank
-            // 
-            this.text200leftank.Location = new System.Drawing.Point(15, 284);
-            this.text200leftank.Name = "text200leftank";
-            this.text200leftank.Size = new System.Drawing.Size(314, 22);
-            this.text200leftank.TabIndex = 24;
-            this.text200leftank.TextChanged += new System.EventHandler(this.text200leftank_TextChanged);
-            // 
-            // text200rightank
-            // 
-            this.text200rightank.Location = new System.Drawing.Point(15, 312);
-            this.text200rightank.Name = "text200rightank";
-            this.text200rightank.Size = new System.Drawing.Size(314, 22);
-            this.text200rightank.TabIndex = 25;
-            this.text200rightank.TextChanged += new System.EventHandler(this.text200rightank_TextChanged);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(373, 262);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(246, 16);
-            this.label11.TabIndex = 21;
-            this.label11.Text = "Parameter names of left and right anchor";
-            this.label11.Click += new System.EventHandler(this.label11_Click);
-            // 
-            // text100leftank
-            // 
-            this.text100leftank.Location = new System.Drawing.Point(376, 284);
-            this.text100leftank.Name = "text100leftank";
-            this.text100leftank.Size = new System.Drawing.Size(314, 22);
-            this.text100leftank.TabIndex = 26;
-            this.text100leftank.TextChanged += new System.EventHandler(this.text100leftank_TextChanged);
-            // 
-            // text100rightank
-            // 
-            this.text100rightank.Location = new System.Drawing.Point(377, 312);
-            this.text100rightank.Name = "text100rightank";
-            this.text100rightank.Size = new System.Drawing.Size(313, 22);
-            this.text100rightank.TabIndex = 27;
-            this.text100rightank.TextChanged += new System.EventHandler(this.text100rightank_TextChanged);
             // 
             // label8
             // 
@@ -325,11 +275,83 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // text200rightank
+            // 
+            this.text200rightank.Location = new System.Drawing.Point(15, 312);
+            this.text200rightank.Name = "text200rightank";
+            this.text200rightank.Size = new System.Drawing.Size(314, 22);
+            this.text200rightank.TabIndex = 25;
+            this.text200rightank.TextChanged += new System.EventHandler(this.text200rightank_TextChanged);
+            // 
+            // text100rightank
+            // 
+            this.text100rightank.Location = new System.Drawing.Point(377, 312);
+            this.text100rightank.Name = "text100rightank";
+            this.text100rightank.Size = new System.Drawing.Size(313, 22);
+            this.text100rightank.TabIndex = 27;
+            this.text100rightank.TextChanged += new System.EventHandler(this.text100rightank_TextChanged);
+            // 
+            // text200leftank
+            // 
+            this.text200leftank.Location = new System.Drawing.Point(15, 284);
+            this.text200leftank.Name = "text200leftank";
+            this.text200leftank.Size = new System.Drawing.Size(314, 22);
+            this.text200leftank.TabIndex = 24;
+            this.text200leftank.TextChanged += new System.EventHandler(this.text200leftank_TextChanged);
+            // 
+            // text100leftank
+            // 
+            this.text100leftank.Location = new System.Drawing.Point(376, 284);
+            this.text100leftank.Name = "text100leftank";
+            this.text100leftank.Size = new System.Drawing.Size(314, 22);
+            this.text100leftank.TabIndex = 26;
+            this.text100leftank.TextChanged += new System.EventHandler(this.text100leftank_TextChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(373, 262);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(246, 16);
+            this.label11.TabIndex = 21;
+            this.label11.Text = "Parameter names of left and right anchor";
+            this.label11.Click += new System.EventHandler(this.label11_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(12, 262);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(246, 16);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Parameter names of left and right anchor";
+            this.label9.Click += new System.EventHandler(this.label9_Click);
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Location = new System.Drawing.Point(377, 86);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(313, 24);
+            this.comboBox4.TabIndex = 32;
+            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.comboBox4_SelectedIndexChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(373, 65);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(175, 16);
+            this.label13.TabIndex = 33;
+            this.label13.Text = "Family Type for 150 mm wall";
+            // 
             // PlaceLintelForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(710, 487);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.comboBox4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.text100length);
             this.Controls.Add(this.text200length);
@@ -387,18 +409,20 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox bigoffset;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox text200leftank;
-        private System.Windows.Forms.TextBox text200rightank;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox text100leftank;
-        private System.Windows.Forms.TextBox text100rightank;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox text200length;
         private System.Windows.Forms.TextBox text100length;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox text200rightank;
+        private System.Windows.Forms.TextBox text100rightank;
+        private System.Windows.Forms.TextBox text200leftank;
+        private System.Windows.Forms.TextBox text100leftank;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Label label13;
     }
 }

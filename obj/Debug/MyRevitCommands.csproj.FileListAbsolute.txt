@@ -1,0 +1,14 @@
+C:\Users\ali\Desktop\MyRevitCommands\bin\Debug\MyRevitCommands.addin
+C:\Users\ali\Desktop\MyRevitCommands\bin\Debug\MyRevitCommands.dll
+C:\Users\ali\Desktop\MyRevitCommands\bin\Debug\MyRevitCommands.pdb
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.csproj.AssemblyReference.cache
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.csproj.CoreCompileInputs.cache
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.dll
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.pdb
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.csproj.GenerateResource.cache
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.SelectLevel.resources
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.FormSelectTemplate.resources
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.PlaceLintelForm.resources
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.SectionBoxForm.resources
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.Links.resources
+C:\Users\ali\Desktop\MyRevitCommands\obj\Debug\MyRevitCommands.LintelMarkForm.resources

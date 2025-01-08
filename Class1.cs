@@ -1,16 +1,16 @@
-﻿using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 namespace MyRevitCommands
 {
     [TransactionAttribute(TransactionMode.ReadOnly)]
-    internal class CollectWindows : IExternalCommand
+    internal class Class1 : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -20,19 +20,16 @@ namespace MyRevitCommands
             {
                 Reference pickedobj = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element);
                 Element ele = doc.GetElement(pickedobj);
-
-                Double genislik = PlaceLintel.lentogenisligi(doc, ele);
-                TaskDialog.Show("asd", genislik.ToString());
+                Parameter leftank = ele.LookupParameter(SelectLintelType.parametername200leftank);
+                Parameter rightank = ele.LookupParameter(SelectLintelType.parametername200rightank);
+                TaskDialog.Show("Asd", leftank.AsInteger().ToString());
+                TaskDialog.Show("Asd", rightank.AsInteger().ToString());
                 return Result.Succeeded;
             }
-            catch (Exception ex)
-            {
-                message = ex.Message;
+            catch 
+            { 
                 return Result.Failed;
             }
-            
-
-            
 
         }
     }

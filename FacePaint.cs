@@ -4,45 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.Attributes;
-using Autodesk.Revit.Creation;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+
 
 namespace MyRevitCommands
 {
     [TransactionAttribute(TransactionMode.Manual)]
-    internal class PlaceFamily2way : IExternalCommand
+    internal class FacePaint : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Autodesk.Revit.DB.Document doc = uidoc.Document;
-            FilteredElementCollector collector = new FilteredElementCollector(doc);
-            FamilySymbol fs =(FamilySymbol)collector.OfClass(typeof(FamilySymbol)).First(x => x.Name == "1525 x 762mm");
-
+            Document doc = uidoc.Document;
             try
             {
-                using (Transaction trans = new Transaction(doc,"Place Family"))
+                Reference pickedobj = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element);
+                Element ele = doc.GetElement(pickedobj);
+                using(Transaction trans = new Transaction(doc, "asd"))
                 {
                     trans.Start();
-                    if (!fs.IsActive)
-                    {
-                        fs.Activate();
-
-                    }
-                    doc.Create.NewFamilyInstance(new XYZ(0, 0, 0), fs, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                    CroppedSectionBasedOnFamilyDimensions.DistanceVerticalFaces(doc, ele);
                     trans.Commit();
 
                 }
-               
+                
                 return Result.Succeeded;
+
             }
             catch (Exception ex)
             {
                 message = ex.Message;
                 return Result.Failed;
             }
-            
         }
     }
 }

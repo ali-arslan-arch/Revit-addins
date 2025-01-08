@@ -10,26 +10,25 @@ using Autodesk.Revit.UI;
 namespace MyRevitCommands
 {
     [TransactionAttribute(TransactionMode.ReadOnly)]
-    internal class GetParameter : IExternalCommand
+    internal class DimensionCollector : IExternalCommand
     {
-        
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIDocument uidoc = commandData.Application.ActiveUIDocument;
             Document doc = uidoc.Document;
             try
             {
-                Reference pickedobj = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element);
-                if (pickedobj != null)
+                FilteredElementCollector dimcol = new FilteredElementCollector(doc,doc.ActiveView.Id);
+                List<Dimension> dimensions = dimcol.OfCategory(BuiltInCategory.OST_Dimensions).WhereElementIsNotElementType().Cast<Dimension>().ToList();
+                int a = dimensions[0].References.Size;
+                ReferenceArray ra = dimensions[0].References;
+                TaskDialog.Show("asd", a.ToString());
+                foreach(Reference refe in ra)
                 {
-                    ElementId eleid = pickedobj.ElementId;
-                    Element ele = doc.GetElement(eleid);
-                    Parameter parameter = ele.LookupParameter("Head Height");
-                    InternalDefinition paramdef = (InternalDefinition)parameter.Definition;
-                    TaskDialog.Show("Get Parameter", parameter.AsValueString() +
-                        string.Format("Parameter {0}  with BuiltIn parameter {1} ", paramdef.Name, paramdef.BuiltInParameter));
-                   
+                    TaskDialog.Show("asd",refe.ElementReferenceType.ToString());
                 }
+
+                    
                 return Result.Succeeded;
 
             }
@@ -38,7 +37,6 @@ namespace MyRevitCommands
                 message = ex.Message;
                 return Result.Failed;
             }
-            
         }
     }
 }

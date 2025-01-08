@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,104 +20,121 @@ namespace MyRevitCommands
             Document doc = uidoc.Document;
             try
             {
-                Reference pickedobj = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element);
-                Element ele = doc.GetElement(pickedobj);
-                FamilyInstance fam = ele as FamilyInstance;
-                Element w = fam.Host; 
+                Reference pickedobj = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.LinkedElement);
+                RevitLinkInstance revitLinkInstance = doc.GetElement(pickedobj) as RevitLinkInstance;
+                Transform transform = revitLinkInstance.GetTransform();
+                Document linkdocument = revitLinkInstance.GetLinkDocument();
+                ElementId eleid = pickedobj.LinkedElementId;
+                Element ele = linkdocument.GetElement(eleid);
+                FamilyInstance family = (FamilyInstance)ele;
+                FamilySymbol fs = family.Symbol;
                 Options op = new Options();
                 op.DetailLevel = ViewDetailLevel.Fine;
-                GeometryElement gele = w.get_Geometry(op);
-                List<Solid> wallgeo = new List<Solid>();
-                List<Face> yatayfaces = new List<Face>();
-                foreach (GeometryObject geom in gele)
+                GeometryElement gg = fs.get_Geometry(op);
+                Solid sl = null;
+                foreach (GeometryObject geo in gg)
                 {
-                    Solid sol = geom as Solid;
-                    wallgeo.Add(sol);
+                    Solid csol = null;
+                    csol = geo as Solid;
+                    if (csol.Volume > 0)
+                    {
+                        sl = SolidUtils.CreateTransformed(csol, transform);
+                    }
 
                 }
-                foreach (Solid sol in wallgeo)
+
+                Reference pick2 = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element);
+                Element ele2 = doc.GetElement(pick2);
+                FamilyInstance fi = (FamilyInstance)ele2;
+                ICollection<ElementId> subComponentIds = fi.GetSubComponentIds();
+                List<FamilyInstance> subComponents = new List<FamilyInstance>();
+                
+                
+                /*foreach (FamilyInstance f in nsc)
                 {
-                    FaceArray faces = sol.Faces;
-                    foreach (Face facew in faces)
+                    TaskDialog.Show("asd",f.Symbol.FamilyName);
+                }*/
+                //bool idAdded = false;
+                Solid sl2 = null;
+                foreach (ElementId subComponentId in subComponentIds)
+                {
+                    // Alt family instance'ı elde edin
+                    FamilyInstance nestedFamilyInstance = doc.GetElement(subComponentId) as FamilyInstance;
+                    subComponents.Add(nestedFamilyInstance);
+                    //TaskDialog.Show("asd", nestedFamilyInstance.Symbol.FamilyName);
+
+                    if (nestedFamilyInstance != null)
                     {
-                        XYZ facenormal = facew.ComputeNormal(new UV());
+                        // Alt family instance'ın geometrisini al
+                        
+                            
 
-                        if (facenormal.AngleTo(new XYZ(0, 0, 1)) == 0 || facenormal.AngleTo(new XYZ(0, 0, -1)) == 0)
+                        
+                    }
+                }
+                List<FamilyInstance> nsc = subComponents.Where(x => x.Symbol.FamilyName.Contains("Уголок") == true).ToList();
+                //TaskDialog.Show("asd", nsc.Count.ToString());
+                GeometryElement geometryElement = nsc[0].get_Geometry(op);
+                TaskDialog.Show("asd",geometryElement.Count().ToString());
+
+                
+                foreach (GeometryObject geometryObject in geometryElement)
+                {
+                    GeometryInstance gi = geometryObject as GeometryInstance;
+                    GeometryElement gel = gi.GetInstanceGeometry();
+                    foreach (GeometryObject g in gel)
+                    {
+                        Solid sol = null;
+                        sol = g as Solid;
+                        if (sol.Volume > 0)
                         {
-                            yatayfaces.Add(facew);
-
+                            sl2 = sol; break;
                         }
                     }
-
                 }
-                List<Face> sortedFaces = yatayfaces.OrderByDescending(f => f.Area).ToList();
-                Face largestFace = sortedFaces[0];
-                Face secondLargestFace = sortedFaces[1];
-                yatayfaces.Remove(largestFace);
-                yatayfaces.Remove(secondLargestFace);
-                BoundingBoxXYZ doorBoundingBox = ele.get_BoundingBox(null);
-                double doortopZ = doorBoundingBox.Max.Z;
-                XYZ doorcenter = (doorBoundingBox.Max + doorBoundingBox.Min) / 2;
-                Double max = Double.MaxValue;
-                Face topFace = null;
-               
-                
-                foreach (Face face in yatayfaces)
+
+                if (sl2 != null)
                 {
-                    BoundingBoxUV faceboundingbox = face.GetBoundingBox();
-                    XYZ faceorigin = face.Evaluate((faceboundingbox.Max + faceboundingbox.Min) / 2);
-                    Double facez = faceorigin.Z;
-                    Double distance = doorcenter.DistanceTo(faceorigin);
-                    if(distance < max)
-                    {
-                        max = distance;
-                        topFace = face;
-                    }
+                    TaskDialog.Show("asd",sl2.Volume.ToString());
                 }
-                using (Transaction trans = new Transaction(doc,"paint"))
+                if (sl != null)
                 {
-                    trans.Start();
-                    //foreach (Face facew in yatayfaces)
-                    
-                        Material paintMaterial = new FilteredElementCollector(doc)
-                            .OfClass(typeof(Material))
-                            .FirstOrDefault(m => m.Name == "Sash") as Material;
-
-                        doc.Paint(w.Id, topFace, paintMaterial.Id);
-
-                    
-                    
-                        
-                    trans.Commit();
-
+                    TaskDialog.Show("asd", sl.Volume.ToString());
                 }
-                IList<CurveLoop> cl = topFace.GetEdgesAsCurveLoops();
-                CurveLoop loop = cl[0];
-                Curve longestCurve = null;
-                double maxLength = 0;
-                foreach (Curve c in loop)
+                if(CheckSolidIntersection2(sl, sl2))
                 {
-                    double curveLength = c.Length;
-
-                    
-                    if (curveLength > maxLength)
-                    {
-                        maxLength = curveLength;
-                        longestCurve = c;
-                    }
-
+                    TaskDialog.Show("asd", "yes");
                 }
-                Double genislik = maxLength * 304.8;
-                
-                
-                TaskDialog.Show("asd", genislik.ToString());
-                return Result.Succeeded;
+
+
+
+                    return Result.Succeeded;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
                 return Result.Failed;
             }
+        }
+        public static bool CheckSolidIntersection2(Solid solid, Solid sol2)
+        {
+            
+            
+                // Kesişim işlemini yapıyoruz
+                Solid intersection = BooleanOperationsUtils.ExecuteBooleanOperation(solid, sol2, BooleanOperationsType.Intersect);
+                
+                // Eğer intersection null değilse ve hacmi sıfırdan büyükse çakışma var demektir
+                if (intersection != null)
+                {
+                    TaskDialog.Show("asd", intersection.Volume.ToString());
+                    if (intersection.Volume > 0 || intersection.SurfaceArea > 0)
+                    {
+                        return true; // Çakışma veya temas var
+                    }
+                }
+            
+
+            return false; // Çakışma yok
         }
 
     }

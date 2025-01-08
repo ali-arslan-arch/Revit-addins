@@ -20,6 +20,7 @@ namespace MyRevitCommands
         public FamilySymbol lintelfor200 { get; set; }
         public FamilySymbol lintelfor100 { get; set; }
         public FamilySymbol lintelfor250 { get; set; }
+        public FamilySymbol lintelfor150 { get; set; }
         public string parametername2001 { get; set; }
         public string parametername2002 { get; set; }
         public string parametername1001 { get; set; }
@@ -58,8 +59,8 @@ namespace MyRevitCommands
             text100leftank.Text = "СЛЕВА";
             text100rightank.Text = "СПРАВА";
             textBoxdiffer.Text = "1500";
-            smalloffset.Text = "150";
-            bigoffset.Text = "200";
+            smalloffset.Text = "200";
+            bigoffset.Text = "250";
             text100length.Text = "020_Длина_перемычки";
             text200length.Text = "020_Длина_перемычки";
 
@@ -81,6 +82,7 @@ namespace MyRevitCommands
                 SymbolWrapper swr = new SymbolWrapper(famsymb);
                 comboBox2.Items.Add(swr);
                 comboBox3.Items.Add(swr);
+                comboBox4.Items.Add(swr);
 
             }
 
@@ -103,6 +105,8 @@ namespace MyRevitCommands
             lintelfor100 = sw2.symbol;
             SymbolWrapper sw3 = comboBox3.SelectedItem as SymbolWrapper;
             lintelfor250 = sw3.symbol;
+            SymbolWrapper sw4 = comboBox4.SelectedItem as SymbolWrapper;
+            lintelfor150 = sw4.symbol;
             parametername2001 = textBox2001.Text;
             parametername1001 = textBox1001.Text;
             parametername2002 = textBox2002.Text;
@@ -246,6 +250,11 @@ namespace MyRevitCommands
         {
             this.DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
     public class SymbolWrapper

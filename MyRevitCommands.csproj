@@ -55,21 +55,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="commands\ChangeLocation.cs" />
-    <Compile Include="commands\CollectWindows.cs" />
-    <Compile Include="commands\DeleteElement.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Class2.cs" />
     <Compile Include="commands\ElementIntersection.cs" />
-    <Compile Include="commands\GetElementId.cs" />
-    <Compile Include="commands\GetParameter.cs" />
-    <Compile Include="commands\PlaceFamily.cs" />
-    <Compile Include="commands\PlaceFamily2way.cs" />
-    <Compile Include="commands\PlaceFloor.cs" />
     <Compile Include="commands\PlaceLineElement.cs" />
     <Compile Include="commands\PlaceView.cs" />
-    <Compile Include="commands\PlanView.cs" />
     <Compile Include="commands\ProjectRay.cs" />
+    <Compile Include="CropCutSecLink.cs" />
+    <Compile Include="CropCutSecPickElement.cs" />
+    <Compile Include="CropFrontSeclink.cs" />
+    <Compile Include="CropFrontSecPickElement.cs" />
+    <Compile Include="CropPlanLinkedElement.cs" />
+    <Compile Include="CropPlanPickElement.cs" />
+    <Compile Include="CropSec.cs" />
     <Compile Include="Dialog.cs" />
+    <Compile Include="DimensionCollector.cs" />
     <Compile Include="ExternalApplication.cs" />
+    <Compile Include="FacePaint.cs" />
+    <Compile Include="FacePaint2.cs" />
     <Compile Include="FormSelectTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,7 +82,22 @@
     <Compile Include="FragmentPlanByCurve.cs" />
     <Compile Include="FragmentPlanbyRegion.cs" />
     <Compile Include="geoele.cs" />
+    <Compile Include="geoele2.cs" />
     <Compile Include="LinkedElementSectionBox.cs" />
+    <Compile Include="Links.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Links.Designer.cs">
+      <DependentUpon>Links.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LintelClashControl.cs" />
+    <Compile Include="LintelMarkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LintelMarkForm.Designer.cs">
+      <DependentUpon>LintelMarkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MarkLintels.cs" />
     <Compile Include="PlaceLintel.cs" />
     <Compile Include="PlaceLintelForm.cs">
       <SubType>Form</SubType>
@@ -87,16 +105,13 @@
     <Compile Include="PlaceLintelForm.Designer.cs">
       <DependentUpon>PlaceLintelForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PlaceLintelSingle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="commands\SelectGeometry.cs" />
-    <Compile Include="commands\SelectGeometry2.cs" />
-    <Compile Include="commands\SetParameter.cs" />
-    <Compile Include="commands\Sheet.cs" />
     <Compile Include="commands\Tag.cs" />
     <Compile Include="commands\ViewFilter.cs" />
     <Compile Include="AddRoomSeparator.cs" />
     <Compile Include="RotateChair.cs" />
-    <Compile Include="Section.cs" />
+    <Compile Include="CroppedSectionBasedOnFamilyDimensions.cs" />
     <Compile Include="SectionBoxForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +125,7 @@
       <DependentUpon>SelectLevel.cs</DependentUpon>
     </Compile>
     <Compile Include="CroppedPlanBasedOnFamilyDimensions.cs" />
+    <Compile Include="SelectLintelType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MyRevitCommands.addin">
@@ -119,6 +135,12 @@
   <ItemGroup>
     <EmbeddedResource Include="FormSelectTemplate.resx">
       <DependentUpon>FormSelectTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Links.resx">
+      <DependentUpon>Links.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LintelMarkForm.resx">
+      <DependentUpon>LintelMarkForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PlaceLintelForm.resx">
       <DependentUpon>PlaceLintelForm.cs</DependentUpon>

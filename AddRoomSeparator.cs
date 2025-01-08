@@ -17,56 +17,73 @@ namespace MyRevitCommands
         {
             UIDocument uidoc = commandData.Application.ActiveUIDocument;
             Autodesk.Revit.DB.Document doc = uidoc.Document;
-            FilteredElementCollector col = new FilteredElementCollector(doc);
-            IList<Element> eles = col.OfCategory(BuiltInCategory.OST_Rooms).ToElements();
+            FilteredElementCollector col = new FilteredElementCollector(doc,doc.ActiveView.Id);
+            List<Element> eles = col.OfCategory(BuiltInCategory.OST_Rooms).ToElements().ToList();
+            
             
             try
             {
-                foreach (Element e in eles)
+                using(Transaction trans = new Transaction(doc,"room separator"))
                 {
-                    SpatialElement spa = e as SpatialElement;
-                   
-
-
-                    Level l = spa.Level;
-                    if (l == null)
+                    trans.Start();
+                    foreach (Element e in eles)
                     {
-                        message = "SpatialElement does not have a valid Level.";
-                        return Result.Failed;
-                    }
 
-                    FilteredElementCollector viewcol = new FilteredElementCollector(doc);
-                    ViewPlan vp = viewcol.OfClass(typeof(ViewPlan))
-                                         .WhereElementIsNotElementType()
-                                         .ToElements().Cast<ViewPlan>().FirstOrDefault(x => x.get_Parameter(BuiltInParameter.PLAN_VIEW_LEVEL).AsValueString() == l.Name);
-                    if (vp == null)
-                    {
-                        message = "No ViewPlan found for the selected level.";
-                        return Result.Failed;
-                    }
-
-                    IList<IList<BoundarySegment>> bss = spa.GetBoundarySegments(new SpatialElementBoundaryOptions());
-                    
-
-                    CurveArray curves = new CurveArray();
-                    foreach (IList<BoundarySegment> segs in bss)
-                    {
-                        foreach (BoundarySegment seg in segs)
+                        SpatialElement spa = e as SpatialElement;
+                        
+                        if (spa.Area == 0)
                         {
-                            Curve c = seg.GetCurve();
-                            curves.Append(c);
+                            continue;
                         }
-                    }
+                        if (spa.Location == null)
+                        {
+                            continue;
+                        }
 
-                    using (Transaction trans = new Transaction(doc, "separator"))
-                    {
-                        trans.Start();
+
+
+                        Level l = spa.Level;
+                        if (l == null)
+                        {
+                            message = "SpatialElement does not have a valid Level.";
+                            return Result.Failed;
+                        }
+
+                        FilteredElementCollector viewcol = new FilteredElementCollector(doc);
+                        ViewPlan vp = viewcol.OfClass(typeof(ViewPlan))
+                                             .WhereElementIsNotElementType()
+                                             .ToElements().Cast<ViewPlan>().FirstOrDefault(x => x.get_Parameter(BuiltInParameter.PLAN_VIEW_LEVEL).AsValueString() == l.Name);
+                        if (vp == null)
+                        {
+                            message = "No ViewPlan found for the selected level.";
+                            return Result.Failed;
+                        }
+
+                        IList<IList<BoundarySegment>> bss = spa.GetBoundarySegments(new SpatialElementBoundaryOptions());
+
+
+                        CurveArray curves = new CurveArray();
+                        foreach (IList<BoundarySegment> segs in bss)
+                        {
+                            foreach (BoundarySegment seg in segs)
+                            {
+                                Curve c = seg.GetCurve();
+                                curves.Append(c);
+                            }
+                        }
+
+                        
+                        
+                            
                         SketchPlane sketchPlane = SketchPlane.Create(doc, l.Id);
                         doc.Create.NewRoomBoundaryLines(sketchPlane, curves, vp);
-                        trans.Commit();
-                    }
+                            
+                        
 
+                    }
+                    trans.Commit();
                 }
+                
                 return Result.Succeeded; ;
             }
             catch(Exception ex)
